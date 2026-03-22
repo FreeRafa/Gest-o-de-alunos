@@ -7,9 +7,9 @@ GO
 -- =========================
 -- Tabela Alunos
 -- =========================
-CREATE TABLE Alunos
+CREATE TABLE Aluno
 (
-    IdAluno INT IDENTITY(1,1) PRIMARY KEY,
+    Id INT IDENTITY(1,1) PRIMARY KEY,
     Nome VARCHAR(100) NOT NULL,
     UltimoNome VARCHAR(100) NOT NULL,
     DataNascimento DATE NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE Alunos
 -- =========================
 CREATE TABLE Professor
 (
-    IdProfessor INT IDENTITY(1,1) PRIMARY KEY,
+    Id INT IDENTITY(1,1) PRIMARY KEY,
     Nome VARCHAR(100) NOT NULL,
     UltimoNome VARCHAR(100) NOT NULL
 );
@@ -32,11 +32,15 @@ CREATE TABLE Professor
 -- =========================
 CREATE TABLE Curso
 (
-    IdCurso INT IDENTITY(1,1) PRIMARY KEY,
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Id_Aluno INT,
     Nome VARCHAR(100) NOT NULL,
-    Duracao INT NOT NULL,           -- ex: duração em meses ou semestres
+    Duracao INT NOT NULL,           -- ex: duraÃ§Ã£o em meses ou semestres
     Descricao VARCHAR(100) NOT NULL,
     [Status] BIT NOT NULL           -- 1 = ativo | 0 = inativo
+
+    CONSTRAINT FK_Curso_Aluno FOREIGN KEY (Id_Aluno)
+        REFERENCES Aluno (Id)
 );
 
 -- =========================
@@ -44,18 +48,18 @@ CREATE TABLE Curso
 -- =========================
 CREATE TABLE Disciplina
 (
-    IdDisciplina INT IDENTITY(1,1) PRIMARY KEY,
+    Id INT IDENTITY(1,1) PRIMARY KEY,
     IdCurso INT NOT NULL,
     IdProfessor INT NOT NULL,
     Nome VARCHAR(100) NOT NULL,
     CargaHoraria INT NOT NULL,
     Semestre INT NOT NULL,
 
-    CONSTRAINT FK_Disciplina_Curso FOREIGN KEY (IdCurso)
-        REFERENCES Curso (IdCurso),
+    CONSTRAINT FK_Disciplina_Curso FOREIGN KEY (Id)
+        REFERENCES Curso (Id),
 
-    CONSTRAINT FK_Disciplina_Professor FOREIGN KEY (IdProfessor)
-        REFERENCES Professor (IdProfessor)
+    CONSTRAINT FK_Disciplina_Professor FOREIGN KEY (Id)
+        REFERENCES Professor (Id)
 );
 
 -- =========================
@@ -63,17 +67,17 @@ CREATE TABLE Disciplina
 -- =========================
 CREATE TABLE Matricula
 (
-    IdMatricula INT IDENTITY (1,1) PRIMARY KEY,
+    Id INT IDENTITY (1,1) PRIMARY KEY,
     IdAluno INT NOT NULL,
     IdDisciplina INT NOT NULL,
     DataMatricula DATE NOT NULL,
-    [Status] INT NOT NULL,           -- 1=Ativa | 2=Trancada | 3=Concluída
+    [Status] INT NOT NULL,           -- 1=Ativa | 2=Trancada | 3=ConcluÃ­da
 
     CONSTRAINT FK_Matricula_Aluno FOREIGN KEY (IdAluno)
-        REFERENCES Alunos (IdAluno),
+        REFERENCES Alunos (Id),
 
     CONSTRAINT FK_Matricula_Disciplina FOREIGN KEY (IdDisciplina)
-        REFERENCES Disciplina (IdDisciplina),
+        REFERENCES Disciplina (Id),
 
     CONSTRAINT UQ_Aluno_Disciplina UNIQUE (IdAluno, IdDisciplina)
 );
