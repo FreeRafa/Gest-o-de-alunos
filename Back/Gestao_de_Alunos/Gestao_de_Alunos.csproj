@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\SqlServer.cs" />
     <Compile Include="Model\Aluno.cs" />
     <Compile Include="Model\Curso.cs" />
     <Compile Include="Model\Disciplina.cs" />
