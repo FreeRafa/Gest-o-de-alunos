@@ -5,7 +5,7 @@ USE Gestao_de_Alunos;
 GO
 
 -- =========================
--- Tabela Alunos
+-- Tabela Aluno
 -- =========================
 CREATE TABLE Aluno
 (
@@ -33,14 +33,10 @@ CREATE TABLE Professor
 CREATE TABLE Curso
 (
     Id INT IDENTITY(1,1) PRIMARY KEY,
-    Id_Aluno INT,
     Nome VARCHAR(100) NOT NULL,
-    Duracao INT NOT NULL,           -- ex: duração em meses ou semestres
-    Descricao VARCHAR(100) NOT NULL,
-    [Status] BIT NOT NULL           -- 1 = ativo | 0 = inativo
-
-    CONSTRAINT FK_Curso_Aluno FOREIGN KEY (Id_Aluno)
-        REFERENCES Aluno (Id)
+    Duracao INT NOT NULL,
+    Descricao VARCHAR(200),
+    [Status] BIT NOT NULL
 );
 
 -- =========================
@@ -55,10 +51,10 @@ CREATE TABLE Disciplina
     CargaHoraria INT NOT NULL,
     Semestre INT NOT NULL,
 
-    CONSTRAINT FK_Disciplina_Curso FOREIGN KEY (Id)
+    CONSTRAINT FK_Disciplina_Curso FOREIGN KEY (IdCurso)
         REFERENCES Curso (Id),
 
-    CONSTRAINT FK_Disciplina_Professor FOREIGN KEY (Id)
+    CONSTRAINT FK_Disciplina_Professor FOREIGN KEY (IdProfessor)
         REFERENCES Professor (Id)
 );
 
@@ -71,15 +67,14 @@ CREATE TABLE Matricula
     IdAluno INT NOT NULL,
     IdDisciplina INT NOT NULL,
     DataMatricula DATE NOT NULL,
-    [Status] INT NOT NULL,           -- 1=Ativa | 2=Trancada | 3=Concluída
+    [Status] INT NOT NULL, -- 1=Ativa | 2=Trancada | 3=Concluída
 
     CONSTRAINT FK_Matricula_Aluno FOREIGN KEY (IdAluno)
-        REFERENCES Alunos (Id),
+        REFERENCES Aluno (Id),
 
     CONSTRAINT FK_Matricula_Disciplina FOREIGN KEY (IdDisciplina)
         REFERENCES Disciplina (Id),
 
     CONSTRAINT UQ_Aluno_Disciplina UNIQUE (IdAluno, IdDisciplina)
 );
-
 

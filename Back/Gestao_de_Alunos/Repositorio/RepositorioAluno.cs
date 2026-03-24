@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.OleDb;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -22,27 +21,26 @@ namespace Gestao_de_Alunos.Repositorio
 
         public void CriarAluno(Aluno aluno)
         {
-            using (SqlConnection connection = new SqlConnection(_ConnectionString)) 
+            using (SqlConnection connection = new SqlConnection(_ConnectionString))
             {
-                string query = @"INSERT INTO Aluno(Id, Nome, UltimoNOme, DataNascimento, Fone, Email) VALUES (@Id, @Nome, @UltimoNome, @DataNascimento, @Fone, @Email)";
+                string query = @"INSERT INTO Aluno(Nome, UltimoNOme, DataNascimento, Fone, Email) VALUES (@Nome, @UltimoNome, @DataNascimento, @Fone, @Email)";
 
                 SqlCommand cmd = new SqlCommand(query, connection);
 
-                cmd.Parameters.Add("@Id", SqlDbType.Int).Value = aluno.Id;
                 cmd.Parameters.Add("@Nome", SqlDbType.NVarChar, 100).Value = aluno.Nome;
                 cmd.Parameters.Add("@UltimoNome", SqlDbType.NVarChar, 100).Value = aluno.UltimoNome;
                 cmd.Parameters.Add("@DataNascimento", SqlDbType.Date).Value = aluno.DataNascimento;
-                cmd.Parameters.Add("@Fone", SqlDbType.NChar, 50).Value = aluno.Fone;
-                cmd.Parameters.Add("@Email", SqlDbType.NChar, 100).Value = aluno.Email;
+                cmd.Parameters.Add("@Fone", SqlDbType.NVarChar, 50).Value = aluno.Fone;
+                cmd.Parameters.Add("@Email", SqlDbType.NVarChar, 100).Value = aluno.Email;
 
                 connection.Open();
                 cmd.ExecuteNonQuery();
             }
         }
 
-        public Aluno LerAluno(int Id) 
+        public Aluno LerAluno(int Id)
         {
-            using (SqlConnection connection = new SqlConnection(_ConnectionString)) 
+            using (SqlConnection connection = new SqlConnection(_ConnectionString))
             {
                 string query = "SELECT * FROM Aluno WHERE Id = @Id";
 
@@ -52,7 +50,7 @@ namespace Gestao_de_Alunos.Repositorio
 
                 connection.Open();
 
-                using (SqlDataReader reader = cmd.ExecuteReader()) 
+                using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     if (reader.Read())
                     {
@@ -63,11 +61,11 @@ namespace Gestao_de_Alunos.Repositorio
                             UltimoNome = reader["UltimoNome"].ToString(),
                             DataNascimento = Convert.ToDateTime(reader["DataNascimento"]),
                             Fone = reader["Fone"].ToString(),
-                            Email = reader["email"].ToString(),
+                            Email = reader["Email"].ToString(),
                         };
                         return aluno;
                     }
-                    else 
+                    else
                     {
                         return null;
                     }
@@ -75,12 +73,45 @@ namespace Gestao_de_Alunos.Repositorio
             }
         }
 
-        public void AtualizarAluno(Aluno aluno) 
+        public void AtualizarAluno(Aluno aluno)
         {
+            using (SqlConnection connection = new SqlConnection(_ConnectionString)) 
+            {
+                string query = @"UPDATE Aluno 
+                                SET Nome = @Nome, 
+                                    UltimoNome = @UltimoNome,
+                                    DataNascimento = @DataNascimento,
+                                    Fone = @Fone,
+                                    Email = @Email,
+                                WHERE Id = @Id";
+
+                SqlCommand cmd = new SqlCommand(query, connection);
+
+
+                cmd.Parameters.Add("@Nome", SqlDbType.NVarChar, 100).Value = aluno.Nome;
+                cmd.Parameters.Add("@UltimoNome", SqlDbType.NVarChar, 100).Value = aluno.UltimoNome;
+                cmd.Parameters.Add("@DataNascimento", SqlDbType.Date).Value = aluno.DataNascimento;
+                cmd.Parameters.Add("@Fone", SqlDbType.NVarChar, 50).Value = aluno.Fone;
+                cmd.Parameters.Add("@Email", SqlDbType.NVarChar, 100).Value = aluno.Email;
+
+                connection.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
 
-        public void DeletarAluno(int Id) 
+        public void DeletarAluno(int Id)
         {
+            using (SqlConnection connection = new SqlConnection(_ConnectionString)) 
+            {
+                string query = "DELETE FROM Aluno WHERE Id = @Id";
+
+                SqlCommand cmd = new SqlCommand(query, connection);
+
+                cmd.Parameters.Add("@Id", SqlDbType.Int).Value = Id;
+
+                connection.Open();
+                cmd.ExecuteNonQuery();
+            }
         }
     }
 }

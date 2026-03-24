@@ -39,10 +39,25 @@ namespace Gestao_de_Alunos.Servico
 
         public void AtualizarAluno(Aluno aluno) 
         {
+            if (aluno.Id <= 0)
+                throw new ArgumentException("Id invalido");
+
+            if (string.IsNullOrWhiteSpace(aluno.Nome))
+                throw new Exception("O nome é obrigatorio");
+
+            if(string.IsNullOrWhiteSpace(aluno.UltimoNome))
+                throw new Exception("O ultimo nome é obrigatorio");
+
+            _alunoRepositorio.AtualizarAluno(aluno);
+
         }
 
         public void DeletarAluno(int Id) 
         {
+            if (Id <= 0)
+                throw new ArgumentException("Id invalido");
+
+            _alunoRepositorio.DeletarAluno(Id);
         }
     }
 }
