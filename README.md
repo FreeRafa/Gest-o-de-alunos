@@ -1,133 +1,119 @@
-# Gest-o-de-alunos
-Sistema de gestão escolar desenvolvido em C# e SQL Server para controle de alunos, professores, cursos e matrículas, aplicando arquitetura em camadas e CRUD completo.
+# 🎓 Gestao de Alunos
 
-# 🎓 Gestão de Alunos
+Sistema de gestão académica desenvolvido em C# com base em arquitetura em camadas, utilizando SQL Server como base de dados.
 
-## 📚 Descrição
+## 📌 Objetivo
 
-Sistema de gestão escolar desenvolvido em **C#** com **SQL Server**, com o objetivo de controlar alunos, professores, cursos, disciplinas e matrículas.
+O sistema permite gerir:
 
-Este projeto simula um ambiente real de uma instituição de ensino, aplicando conceitos de **modelagem de banco de dados**, **CRUD completo** e **arquitetura em camadas**.
+- Alunos
+- Professores
+- Cursos
+- Disciplinas
+- Matrículas
 
----
-
-## 🛠️ Tecnologias utilizadas
-
-* C#
-* ADO.NET
-* SQL Server
+Com foco em boas práticas de programação, separação de responsabilidades e persistência de dados.
 
 ---
 
-## ⚙️ Funcionalidades
+## 🏗️ Arquitetura do Projeto
 
-### 👨‍🎓 Alunos
+O projeto segue uma arquitetura em camadas:
 
-* Cadastro de alunos
-* Listagem de alunos
-
-### 👨‍🏫 Professores
-
-* Cadastro de professores
-
-### 📚 Cursos
-
-* Criação de cursos
-* Associação de cursos com disciplinas
-
-### 📖 Disciplinas
-
-* Cadastro de disciplinas
-* Associação com cursos e professores
-
-### 📝 Matrículas
-
-* Matrícula de alunos em disciplinas
-* Controle de status da matrícula
+- **Model** → Representa as entidades do sistema (Aluno, Professor, Curso, Disciplina, Matricula)
+- **Data** → Responsável pela conexão com a base de dados (SQL Server)
+- **Repositorio** → Contém a lógica de acesso aos dados (ADO.NET)
+- **Servico** → Contém as regras de negócio e validações
+- **Program.cs** → Ponto de entrada da aplicação
 
 ---
 
-## 🧠 Conceitos aplicados
+## 🗄️ Base de Dados
 
-* CRUD completo (Create, Read, Update, Delete)
-* Relacionamentos entre tabelas (1:N e N:N)
-* Uso de FOREIGN KEY para integridade de dados
-* Constraint UNIQUE para evitar duplicidade
-* Separação de camadas:
+O sistema utiliza SQL Server com as seguintes tabelas:
 
-  * Model
-  * Repositório
-  * Serviço
+- Aluno
+- Professor
+- Curso
+- Disciplina
+- Matricula
 
----
+Relacionamentos principais:
+- Um Curso possui várias Disciplinas
+- Uma Disciplina pertence a um Curso e a um Professor
+- Um Aluno pode matricular-se em várias Disciplinas
 
-## 🗄️ Estrutura do banco de dados
+## ⚙️ Tecnologias Utilizadas
 
-O sistema é composto pelas seguintes tabelas:
-
-* Alunos
-* Professores
-* Curso
-* Disciplina
-* Matricula
-
-### 🔗 Relacionamentos
-
-* Um curso possui várias disciplinas
-* Um professor pode lecionar várias disciplinas
-* Um aluno pode estar matriculado em várias disciplinas
+- C#
+- .NET
+- SQL Server
+- ADO.NET
+- Programação Orientada a Objetos (POO)
 
 ---
 
-## 📂 Estrutura do projeto
+## 🔑 Funcionalidades
 
-```
-/Model
-/Repositorio
-/Servico
-/SQL
-Program.cs
-```
+### Aluno
+- Criar aluno
+- Consultar aluno por ID
+- Atualizar aluno
+- Remover aluno
 
----
+### Professor
+- Gestão de professores
 
-## 🚀 Como executar o projeto
+### Curso
+- Gestão de cursos disponíveis
 
-1. Clonar o repositório:
+### Disciplina
+- Associada a um curso e a um professor
 
-```
-git clone https://github.com/FreeRafa/Gestao_de_Alunos.git
-```
-
-2. Criar o banco de dados no SQL Server usando os scripts da pasta `/SQL`
-
-3. Configurar a connection string no projeto
-
-4. Executar o projeto no Visual Studio
+### Matrícula
+- Alunos podem matricular-se em disciplinas
+- Relacionamento entre aluno e disciplina
 
 ---
 
-## ⚠️ Observações
+## 🚀 Como Executar
 
-* Este projeto é voltado para fins de estudo
-* A connection string deve ser ajustada conforme o ambiente local
-* Não contém dados sensíveis
-
----
-
-## 🎯 Objetivo
-
-Praticar desenvolvimento **back-end com C# e SQL Server**, com foco em:
-
-* Modelagem de dados
-* Organização de código
-* Boas práticas de desenvolvimento
+1. Configurar a connection string no ficheiro `SqlServer.cs` ou `App.config`
+2. Executar o script SQL para criação da base de dados
+3. Compilar e executar o projeto no Visual Studio
 
 ---
 
-## 📈 Próximas melhorias
+## 📂 Estrutura do Projeto
+Gestao_de_Alunos/
+│
+├── Model/
+├── Repositorio/
+├── Servico/
+├── Program.cs (ou entry point)
 
-* Implementar validações mais robustas
-* Adicionar filtros e buscas avançadas
-* Criar interface gráfica (futuramente)
-* Implementar async/await
+
+---
+
+## 🧠 Conceitos Aplicados
+
+- Arquitetura em camadas
+- Separação de responsabilidades
+- ADO.NET para acesso a dados
+- Programação orientada a objetos
+- Validação de regras de negócio na camada Service
+---
+
+## 📈 Próximos Passos
+
+- Implementação de interface (API ou UI)
+- Uso de Entity Framework (opcional)
+- Implementação de autenticação
+- Melhorias na gestão de matrículas (fluxos automáticos)
+- Testes unitários
+
+---
+
+## 👨‍💻 Autor
+
+Projeto desenvolvido como parte de estudo prático de C# e SQL Server.
