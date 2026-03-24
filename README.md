@@ -18,18 +18,19 @@ Com foco em boas práticas de programação, separação de responsabilidades e 
 
 ## 🏗️ Arquitetura do Projeto
 
-O projeto está dividido em camadas:
+O projeto segue uma arquitetura em camadas:
 
-- **Model** → Representa as entidades (Aluno, Professor, Curso, etc.)
-- **Repositorio** → Responsável pelo acesso à base de dados (SQL Server)
-- **Servico** → Contém regras de negócio e validações
-- **(Futuro) Controller / API ou UI** → Interface de interação com o utilizador
+- **Model** → Representa as entidades do sistema (Aluno, Professor, Curso, Disciplina, Matricula)
+- **Data** → Responsável pela conexão com a base de dados (SQL Server)
+- **Repositorio** → Contém a lógica de acesso aos dados (ADO.NET)
+- **Servico** → Contém as regras de negócio e validações
+- **Program.cs** → Ponto de entrada da aplicação
 
 ---
 
 ## 🗄️ Base de Dados
 
-A base de dados inclui as seguintes tabelas:
+O sistema utiliza SQL Server com as seguintes tabelas:
 
 - Aluno
 - Professor
@@ -37,13 +38,10 @@ A base de dados inclui as seguintes tabelas:
 - Disciplina
 - Matricula
 
-### Relações principais:
-
+Relacionamentos principais:
 - Um Curso possui várias Disciplinas
-- Uma Disciplina está associada a um Professor e a um Curso
-- Um Aluno pode matricular-se em várias Disciplinas (via Matricula)
-
----
+- Uma Disciplina pertence a um Curso e a um Professor
+- Um Aluno pode matricular-se em várias Disciplinas
 
 ## ⚙️ Tecnologias Utilizadas
 
@@ -59,32 +57,30 @@ A base de dados inclui as seguintes tabelas:
 
 ### Aluno
 - Criar aluno
-- Listar aluno por ID
+- Consultar aluno por ID
 - Atualizar aluno
 - Remover aluno
 
 ### Professor
-- CRUD completo
+- Gestão de professores
 
 ### Curso
-- CRUD completo
+- Gestão de cursos disponíveis
 
 ### Disciplina
-- CRUD com ligação a Curso e Professor
+- Associada a um curso e a um professor
 
 ### Matrícula
-- Criar matrícula
-- Listar matrículas
-- Cancelar matrícula
+- Alunos podem matricular-se em disciplinas
+- Relacionamento entre aluno e disciplina
 
 ---
 
 ## 🚀 Como Executar
 
-1. Criar a base de dados executando o script SQL
-2. Configurar a connection string no projeto
-3. Executar o projeto em Visual Studio
-4. Testar as funcionalidades através da camada de serviço/repositório
+1. Configurar a connection string no ficheiro `SqlServer.cs` ou `App.config`
+2. Executar o script SQL para criação da base de dados
+3. Compilar e executar o projeto no Visual Studio
 
 ---
 
@@ -101,12 +97,11 @@ Gestao_de_Alunos/
 
 ## 🧠 Conceitos Aplicados
 
-- Separação de responsabilidades (Repository / Service)
-- Injeção de dependência
-- Validação de dados na camada de serviço
-- Acesso a dados com ADO.NET
-- Modelagem relacional de base de dados
-
+- Arquitetura em camadas
+- Separação de responsabilidades
+- ADO.NET para acesso a dados
+- Programação orientada a objetos
+- Validação de regras de negócio na camada Service
 ---
 
 ## 📈 Próximos Passos
