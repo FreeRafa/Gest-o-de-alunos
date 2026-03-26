@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Gestao_de_Alunos.MenuAux;
+using Gestao_de_Alunos.Repositorio;
+using Gestao_de_Alunos.Servico;
+using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
@@ -29,6 +32,14 @@ namespace Gestao_de_Alunos
             {
                 Console.WriteLine("Erro geral: " + ex.Message);
             }
+
+            RepositorioAluno repositorioAluno = new RepositorioAluno(connectionString);
+            ServicoAluno servicoAluno = new ServicoAluno(repositorioAluno);
+
+            MenuAluno menuAluno = new MenuAluno(servicoAluno);
+
+            //int opcao = -1;
+
         }
     }
 }

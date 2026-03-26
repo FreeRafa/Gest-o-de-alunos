@@ -25,8 +25,9 @@ namespace Gestao_de_Alunos.MenuAux
             {
                 Console.WriteLine("=== Menu de Aluno ===");
                 Console.WriteLine("1 .Login");
-                Console.WriteLine("2 .Cadastrar");
-              
+                Console.WriteLine("2 .Ver Disciplinas");
+                Console.WriteLine("3 .Matricular");
+
                 Console.Write("Escolha uma opção: ");
 
                 opcao = int.Parse(Console.ReadLine());
@@ -35,23 +36,20 @@ namespace Gestao_de_Alunos.MenuAux
                 {
                     case 1:
 
+                        break;
+
+                    case 2:                    
 
                         break;
 
-                    case 2:
-
-                        Aluno aluno = new Aluno();
-
-                        Console.WriteLine("Cadastro:");
-
+                    case 3: 
                         
-
-                        Console.WriteLine("Aluno cadastrado com sucesso!");
-
                         break;
 
                     case 0:
+
                         break;
+
                     default:
                         Console.WriteLine("Opção inválida!");
                         break;
