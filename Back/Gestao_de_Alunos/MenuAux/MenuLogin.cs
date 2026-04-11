@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Gestao_de_Alunos.MenuAux
 {
-    internal class MenuLogin
+    public class MenuLogin
     {
     }
 }

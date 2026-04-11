@@ -1,4 +1,5 @@
 ﻿using Gestao_de_Alunos.MenuAux;
+using Gestao_de_Alunos.Model;
 using Gestao_de_Alunos.Repositorio;
 using Gestao_de_Alunos.Servico;
 using System;
@@ -10,56 +11,100 @@ namespace Gestao_de_Alunos
     {
         static void Main(string[] args)
         {
-            string connectionString = "Server=DESKTOP-42RL6N1;Database=Gestao_de_Alunos;User Id=sa;Password=135113rr;";
+            string cs = "Server=DESKTOP-42RL6N1;Database=Gestao_de_Alunos;User Id=sa;Password=135113rr;";
 
+            // Testar ligação
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                { conn.Open(); Console.WriteLine("Conexão bem-sucedida!\n"); }
+                using (SqlConnection conn = new SqlConnection(cs))
+                { conn.Open(); Console.WriteLine("Ligacao bem-sucedida!\n"); }
             }
             catch (Exception ex)
-            {
-                Console.WriteLine("Erro de ligação: " + ex.Message);
-                Console.ReadKey(); return;
-            }
+            { Console.WriteLine("Erro: " + ex.Message); Console.ReadKey(); return; }
 
-            // Alunos
-            var menuAluno = new MenuAluno(new ServicoAluno(new RepositorioAluno(connectionString)));
-            // Professores
-            var menuProfessor = new MenuProfessor(new ServicoProfessor(new RepositorioProfessor(connectionString)));
-            // Cursos
-            var menuCurso = new MenuCurso(new ServicoCurso(new RepositorioCurso(connectionString)));
-            // Disciplinas
-            var menuDisciplina = new MenuDisciplina(new ServicoDisciplina(new RepositorioDisciplina(connectionString)));
-            // Matrículas
-            var menuMatricula = new MenuMatricula(new ServicoMatricula(new RepositorioMatricula(connectionString)));
+            // Repositórios
+            var repoAluno = new RepositorioAluno(cs);
+            var repoProfessor = new RepositorioProfessor(cs);
+            var repoCurso = new RepositorioCurso(cs);
+            var repoDisc = new RepositorioDisciplina(cs);
+            var repoMatricula = new RepositorioMatricula(cs);
+            var repoUtil = new RepositorioUtilizador(cs);
 
+            // Serviços
+            var servicoAluno = new ServicoAluno(repoAluno);
+            var servicoProfessor = new ServicoProfessor(repoProfessor);
+            var servicoCurso = new ServicoCurso(repoCurso);
+            var servicoDisc = new ServicoDisciplina(repoDisc);
+            var servicoMatricula = new ServicoMatricula(repoMatricula);
+            var servicoAuth = new ServicoAuth(repoUtil);
+
+            // Menus auxiliares
+            var menuCurso = new MenuCurso(servicoCurso);
+            var menuDisciplina = new MenuDisciplina(servicoDisc);
+
+            // Menu principal
             int opcao = -1;
             while (opcao != 0)
             {
                 Console.WriteLine("\n╔══════════════════════════════╗");
-                Console.WriteLine("║   SISTEMA DE GESTÃO ESCOLAR  ║");
+                Console.WriteLine("║   SISTEMA DE GESTAO ESCOLAR  ║");
                 Console.WriteLine("╠══════════════════════════════╣");
-                Console.WriteLine("║  1. Gerir Alunos             ║");
-                Console.WriteLine("║  2. Gerir Professores        ║");
-                Console.WriteLine("║  3. Gerir Cursos             ║");
-                Console.WriteLine("║  4. Gerir Disciplinas        ║");
-                Console.WriteLine("║  5. Gerir Matrículas         ║");
+                Console.WriteLine("║  1. Ver cursos               ║");
+                Console.WriteLine("║  2. Login                    ║");
                 Console.WriteLine("║  0. Sair                     ║");
                 Console.WriteLine("╚══════════════════════════════╝");
-                Console.Write("Escolha uma opção: ");
+                Console.Write("Escolha: ");
 
-                if (!int.TryParse(Console.ReadLine(), out opcao)) { Console.WriteLine("Opção inválida!"); continue; }
+                if (!int.TryParse(Console.ReadLine(), out opcao))
+                { Console.WriteLine("Opcao invalida!"); continue; }
 
                 switch (opcao)
                 {
-                    case 1: menuAluno.Mostrar(); break;
-                    case 2: menuProfessor.Mostrar(); break;
-                    case 3: menuCurso.Mostrar(); break;
-                    case 4: menuDisciplina.Mostrar(); break;
-                    case 5: menuMatricula.Mostrar(); break;
-                    case 0: Console.WriteLine("Até logo!"); break;
-                    default: Console.WriteLine("Opção inválida!"); break;
+                    case 1:
+                        var cursos = servicoCurso.ListarTodos();
+                        Console.WriteLine("\n--- Cursos disponiveis ---");
+                        foreach (var c in cursos)
+                            if (c.Status)
+                                Console.WriteLine($"  [{c.Id}] {c.Nome} — {c.Duracao} semestres");
+                        break;
+
+                    case 2:
+                        Utilizador utilizador = null;
+                        try
+                        {
+                            Console.Write("\nEmail: ");
+                            string email = Console.ReadLine();
+                            Console.Write("Password: ");
+                            string password = Console.ReadLine();
+                            utilizador = servicoAuth.Login(email, password);
+                            Console.WriteLine($"\nBem-vindo, {utilizador.Email}! Perfil: {utilizador.Perfil}");
+                        }
+                        catch (Exception ex)
+                        { Console.WriteLine("Erro: " + ex.Message); break; }
+
+                        if (utilizador.EhAluno)
+                        {
+                            var menuAluno = new MenuAluno(servicoAluno, servicoMatricula,
+                                                          servicoCurso, servicoAuth);
+                            menuAluno.Mostrar(utilizador);
+                        }
+                        else if (utilizador.EhProfessor)
+                        {
+                            var menuProf = new MenuProfessor(servicoProfessor, servicoAluno,
+                                                             servicoCurso, servicoDisc,
+                                                             servicoMatricula, servicoAuth,
+                                                             menuCurso, menuDisciplina);
+                            menuProf.Mostrar(utilizador);
+                        }
+                        break;
+
+                    case 0:
+                        Console.WriteLine("Ate logo!");
+                        break;
+
+                    default:
+                        Console.WriteLine("Opcao invalida!");
+                        break;
                 }
             }
         }

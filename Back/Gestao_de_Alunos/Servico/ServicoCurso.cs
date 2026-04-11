@@ -7,6 +7,7 @@ namespace Gestao_de_Alunos.Servico
 {
     public class ServicoCurso
     {
+        public string ConnectionString => _repositorio.ConnectionString;
         private readonly RepositorioCurso _repositorio;
 
         public ServicoCurso(RepositorioCurso repositorio)

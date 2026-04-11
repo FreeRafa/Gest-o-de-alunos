@@ -7,6 +7,7 @@ namespace Gestao_de_Alunos.Repositorio
 {
     public class RepositorioCurso
     {
+        public string ConnectionString => _ConnectionString;
         private readonly string _ConnectionString;
 
         public RepositorioCurso(string connectionString)
