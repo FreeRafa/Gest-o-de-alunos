@@ -56,5 +56,10 @@ namespace Gestao_de_Alunos.Servico
 
             _professorRepositorio.DeletarProfessor(Id);
         }
+
+        public List<Professor> ListarTodos()
+        {
+            return _professorRepositorio.ListarTodos();
+        }
     }
 }

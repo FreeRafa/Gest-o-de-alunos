@@ -45,6 +45,9 @@
   <ItemGroup>
     <Compile Include="Data\SqlServer.cs" />
     <Compile Include="MenuAux\MenuAluno.cs" />
+    <Compile Include="MenuAux\MenuCurso.cs" />
+    <Compile Include="MenuAux\MenuDisciplina.cs" />
+    <Compile Include="MenuAux\MenuMatricula.cs" />
     <Compile Include="MenuAux\MenuProfessor.cs" />
     <Compile Include="Model\Aluno.cs" />
     <Compile Include="Model\Curso.cs" />
@@ -54,8 +57,14 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositorio\RepositorioAluno.cs" />
+    <Compile Include="Repositorio\RepositorioCurso.cs" />
+    <Compile Include="Repositorio\RepositorioDisciplina.cs" />
+    <Compile Include="Repositorio\RepositorioMatricula.cs" />
     <Compile Include="Repositorio\RepositorioProfessor.cs" />
     <Compile Include="Servico\ServicoAluno.cs" />
+    <Compile Include="Servico\ServicoCurso.cs" />
+    <Compile Include="Servico\ServicoDisciplina.cs" />
+    <Compile Include="Servico\ServicoMatricula.cs" />
     <Compile Include="Servico\ServicoProfessor.cs" />
   </ItemGroup>
   <ItemGroup>
