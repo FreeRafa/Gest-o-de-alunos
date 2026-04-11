@@ -139,3 +139,68 @@ string cs = "Server=SEU_SERVIDOR;Database=Gestao_de_Alunos;User Id=SEU_USER;Pass
 ---
 
 ## 📂 Estrutura do Projeto
+Gestao_de_Alunos/
+│
+├── Data/
+│   └── script.sql
+│
+├── Model/
+│   ├── Aluno.cs
+│   ├── Professor.cs
+│   ├── Curso.cs
+│   ├── Disciplina.cs
+│   ├── Matricula.cs
+│   └── Utilizador.cs
+│
+├── Repositorio/
+│   ├── RepositorioAluno.cs
+│   ├── RepositorioProfessor.cs
+│   ├── RepositorioCurso.cs
+│   ├── RepositorioDisciplina.cs
+│   ├── RepositorioMatricula.cs
+│   └── RepositorioUtilizador.cs
+│
+├── Servico/
+│   ├── ServicoAluno.cs
+│   ├── ServicoProfessor.cs
+│   ├── ServicoCurso.cs
+│   ├── ServicoDisciplina.cs
+│   ├── ServicoMatricula.cs
+│   └── ServicoAuth.cs
+│
+├── MenuAux/
+│   ├── MenuAluno.cs
+│   ├── MenuProfessor.cs
+│   ├── MenuCurso.cs
+│   ├── MenuDisciplina.cs
+│   └── MenuMatricula.cs
+│
+└── Program.cs
+---
+
+## 🧠 Conceitos Aplicados
+
+- Arquitetura em camadas (Model, Repositório, Serviço, Menu)
+- Separação de responsabilidades
+- ADO.NET para acesso a dados
+- Programação Orientada a Objetos
+- Validação de regras de negócio na camada Serviço
+- Sistema de autenticação com perfis
+- Injeção de dependências manual
+
+---
+
+## 📈 Próximos Passos
+
+- Encriptação de passwords (hash SHA256 ou bcrypt)
+- Registo de aluno pelo próprio sistema
+- Implementação de API REST (ASP.NET Core)
+- Uso de Entity Framework
+- Testes unitários
+- Interface gráfica (WinForms / WPF / Web)
+
+---
+
+## 👨‍💻 Autor
+
+Projeto desenvolvido como parte de estudo prático de C# e SQL Server.
