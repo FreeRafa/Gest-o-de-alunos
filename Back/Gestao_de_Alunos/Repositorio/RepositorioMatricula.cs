@@ -134,5 +134,49 @@ namespace Gestao_de_Alunos.Repositorio
                 NomeDisciplina = reader["NomeDisciplina"].ToString()
             };
         }
+
+        public List<Matricula> ListarPorDisciplina(int idDisciplina)
+        {
+            var lista = new List<Matricula>();
+            using (SqlConnection connection = new SqlConnection(_ConnectionString))
+            {
+                string query = @"
+            SELECT 
+                m.Id,
+                m.IdAluno,
+                m.IdDisciplina,
+                m.DataMatricula,
+                m.Status,
+                a.Nome + ' ' + a.UltimoNome AS NomeAluno,
+                d.Nome AS NomeDisciplina
+            FROM Matricula m
+            INNER JOIN Aluno a ON m.IdAluno = a.Id
+            INNER JOIN Disciplina d ON m.IdDisciplina = d.Id
+            WHERE m.IdDisciplina = @IdDisciplina
+            ORDER BY a.Nome";
+
+                SqlCommand cmd = new SqlCommand(query, connection);
+                cmd.Parameters.Add("@IdDisciplina", SqlDbType.Int).Value = idDisciplina;
+
+                connection.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        lista.Add(new Matricula
+                        {
+                            Id = (int)reader["Id"],
+                            IdAluno = (int)reader["IdAluno"],
+                            IdDisciplina = (int)reader["IdDisciplina"],
+                            DataMatricula = Convert.ToDateTime(reader["DataMatricula"]),
+                            Status = (int)reader["Status"],
+                            NomeAluno = reader["NomeAluno"].ToString(),
+                            NomeDisciplina = reader["NomeDisciplina"].ToString()
+                        });
+                    }
+                }
+            }
+            return lista;
+        }
     }
 }

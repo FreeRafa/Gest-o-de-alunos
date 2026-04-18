@@ -46,8 +46,10 @@ namespace Gestao_de_Alunos.MenuAux
                 Console.WriteLine("5. Gerir cursos");
                 Console.WriteLine("6. Gerir disciplinas");
                 Console.WriteLine("7. Ver todas as matrículas");
+                Console.WriteLine("8. Ver as minhas disciplinas");//aqui
+                Console.WriteLine("9. Ver alunos de uma disciplina");//aqui
                 Console.WriteLine("--- Conta ---");
-                Console.WriteLine("8. Alterar password");
+                Console.WriteLine("10. Alterar password");
                 Console.WriteLine("0. Sair / Logout");
                 Console.Write("Escolha: ");
 
@@ -63,7 +65,9 @@ namespace Gestao_de_Alunos.MenuAux
                     case 5: GerirCursos(); break;
                     case 6: GerirDisciplinas(); break;
                     case 7: VerMatriculas(); break;
-                    case 8: AlterarPassword(utilizador); break;
+                    case 8: VerMinhasDisciplinas(utilizador.IdReferencia); break;   
+                    case 9: VerAlunosDaDisciplina(utilizador.IdReferencia); break;
+                    case 10: AlterarPassword(utilizador); break;
                     case 0: Console.WriteLine("Até logo!"); break;
                     default: Console.WriteLine("Opção inválida!"); break;
                 }
@@ -189,6 +193,61 @@ namespace Gestao_de_Alunos.MenuAux
                 Console.WriteLine("Password alterada!");
             }
             catch (Exception ex) { Console.WriteLine("Erro: " + ex.Message); }
+        }
+
+        private void VerMinhasDisciplinas(int idProfessor)
+        {
+            Console.WriteLine("\n--- As minhas disciplinas ---");
+            var lista = _servicoDisciplina.ListarPorProfessor(idProfessor);
+
+            if (lista.Count == 0)
+            { Console.WriteLine("Não tens disciplinas atribuídas."); return; }
+
+            Console.WriteLine($"{"ID",-5} {"Disciplina",-30} {"Curso",-25}");
+            Console.WriteLine(new string('-', 62));
+            foreach (var d in lista)
+                Console.WriteLine($"{d.Id,-5} {d.Nome,-30} {d.NomeCurso,-25}");
+        }
+
+        private void VerAlunosDaDisciplina(int idProfessor)
+        {
+            Console.WriteLine("\n--- Alunos por disciplina ---");
+
+            var disciplinas = _servicoDisciplina.ListarPorProfessor(idProfessor);
+            if (disciplinas.Count == 0)
+            { Console.WriteLine("Não tens disciplinas atribuídas."); return; }
+
+            Console.WriteLine($"{"ID",-5} {"Disciplina",-30} {"Curso",-25}");
+            Console.WriteLine(new string('-', 62));
+            foreach (var d in disciplinas)
+                Console.WriteLine($"{d.Id,-5} {d.Nome,-30} {d.NomeCurso,-25}");
+
+            Console.Write("\nID da disciplina (0 para voltar): ");
+            if (!int.TryParse(Console.ReadLine(), out int idDisc) || idDisc == 0) return;
+
+            // Garante que a disciplina pertence a este professor
+            if (!disciplinas.Exists(d => d.Id == idDisc))
+            { Console.WriteLine("Disciplina não encontrada ou não te pertence."); return; }
+
+            var alunos = _servicoMatricula.ListarPorDisciplina(idDisc);
+            var nomeDisciplina = disciplinas.Find(d => d.Id == idDisc)?.Nome;
+
+            if (alunos.Count == 0)
+            { Console.WriteLine($"Nenhum aluno inscrito em {nomeDisciplina}."); return; }
+
+            Console.WriteLine($"\n--- Alunos inscritos em: {nomeDisciplina} ---");
+            Console.WriteLine($"{"ID Mat.",-8} {"Aluno",-30} {"Data Insc.",-12} {"Status",-10}");
+            Console.WriteLine(new string('-', 62));
+
+            foreach (var m in alunos)
+            {
+                string status = m.Status == 1 ? "Ativa"
+                              : m.Status == 2 ? "Trancada"
+                              : "Concluída";
+                Console.WriteLine($"{m.Id,-8} {m.NomeAluno,-30} {m.DataMatricula:dd/MM/yyyy,-12} {status,-10}");
+            }
+
+            Console.WriteLine($"\nTotal: {alunos.Count} aluno(s) inscrito(s)");
         }
     }
 }

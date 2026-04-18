@@ -42,5 +42,13 @@ namespace Gestao_de_Alunos.Servico
             if (id <= 0) throw new ArgumentException("Id inválido.");
             _repositorio.DeletarMatricula(id);
         }
+
+        public List<Matricula> ListarPorDisciplina(int idDisciplina)
+        {
+            if (idDisciplina <= 0)
+                throw new ArgumentException("ID de disciplina inválido.");
+
+            return _repositorio.ListarPorDisciplina(idDisciplina);
+        }
     }
 }

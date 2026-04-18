@@ -118,5 +118,39 @@ namespace Gestao_de_Alunos.Repositorio
                 NomeProfessor = reader["NomeProfessor"].ToString()
             };
         }
+
+        public List<Disciplina> ListarPorProfessor(int idProfessor)
+        {
+            var lista = new List<Disciplina>();
+            using (SqlConnection connection = new SqlConnection(_ConnectionString))
+            {
+                string query = @"
+            SELECT d.Id, d.Nome, d.IdCurso, d.IdProfessor, c.Nome AS NomeCurso
+            FROM Disciplina d
+            INNER JOIN Curso c ON d.IdCurso = c.Id
+            WHERE d.IdProfessor = @IdProfessor
+            ORDER BY d.Nome";
+
+                SqlCommand cmd = new SqlCommand(query, connection);
+                cmd.Parameters.Add("@IdProfessor", SqlDbType.Int).Value = idProfessor;
+
+                connection.Open();
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        lista.Add(new Disciplina
+                        {
+                            Id = (int)reader["Id"],
+                            Nome = reader["Nome"].ToString(),
+                            IdCurso = (int)reader["IdCurso"],
+                            IdProfessor = (int)reader["IdProfessor"],
+                            NomeCurso = reader["NomeCurso"].ToString()
+                        });
+                    }
+                }
+            }
+            return lista;
+        }
     }
 }

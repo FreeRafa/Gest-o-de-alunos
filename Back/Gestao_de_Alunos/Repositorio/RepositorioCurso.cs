@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Gestao_de_Alunos.Model;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
-using Gestao_de_Alunos.Model;
 
 namespace Gestao_de_Alunos.Repositorio
 {
@@ -86,11 +87,35 @@ namespace Gestao_de_Alunos.Repositorio
         {
             using (SqlConnection connection = new SqlConnection(_ConnectionString))
             {
-                string query = "DELETE FROM Curso WHERE Id = @Id";
-                SqlCommand cmd = new SqlCommand(query, connection);
-                cmd.Parameters.Add("@Id", SqlDbType.Int).Value = id;
                 connection.Open();
-                cmd.ExecuteNonQuery();
+
+                
+                string queryVerificar = @"
+            SELECT COUNT(*) 
+            FROM Matricula m
+            INNER JOIN Disciplina d ON m.IdDisciplina = d.Id
+            WHERE d.IdCurso = @Id";
+
+                SqlCommand cmdVerificar = new SqlCommand(queryVerificar, connection);
+                cmdVerificar.Parameters.Add("@Id", SqlDbType.Int).Value = id;
+
+                int totalMatriculas = (int)cmdVerificar.ExecuteScalar();
+
+                if (totalMatriculas > 0)
+                    throw new InvalidOperationException(
+                        $"Não é possível eliminar este curso. Existem {totalMatriculas} matrícula(s) ativa(s) nas suas disciplinas. " +
+                        "Cancela primeiro as matrículas.");
+
+               
+                string queryDisciplinas = "DELETE FROM Disciplina WHERE IdCurso = @Id";
+                SqlCommand cmdDisc = new SqlCommand(queryDisciplinas, connection);
+                cmdDisc.Parameters.Add("@Id", SqlDbType.Int).Value = id;
+                cmdDisc.ExecuteNonQuery();
+
+                string queryCurso = "DELETE FROM Curso WHERE Id = @Id";
+                SqlCommand cmdCurso = new SqlCommand(queryCurso, connection);
+                cmdCurso.Parameters.Add("@Id", SqlDbType.Int).Value = id;
+                cmdCurso.ExecuteNonQuery();
             }
         }
 

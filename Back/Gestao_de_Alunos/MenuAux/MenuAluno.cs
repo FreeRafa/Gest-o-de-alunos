@@ -33,6 +33,7 @@ namespace Gestao_de_Alunos.MenuAux
                 Console.WriteLine("3. Ver as minhas matrículas");
                 Console.WriteLine("4. Alterar o meu cadastro");
                 Console.WriteLine("5. Alterar password");
+                Console.WriteLine("6. Cancelar uma matrícula");
                 Console.WriteLine("0. Sair / Logout");
                 Console.Write("Escolha: ");
 
@@ -46,6 +47,7 @@ namespace Gestao_de_Alunos.MenuAux
                     case 3: VerMinhasMatriculas(utilizador.IdReferencia); break;
                     case 4: AlterarCadastro(utilizador.IdReferencia); break;
                     case 5: AlterarPassword(utilizador); break;
+                    case 6: CancelarMinhaMatricula(utilizador.IdReferencia); break;
                     case 0: Console.WriteLine("Até logo!"); break;
                     default: Console.WriteLine("Opção inválida!"); break;
                 }
@@ -131,6 +133,43 @@ namespace Gestao_de_Alunos.MenuAux
             {
                 _servicoAuth.AlterarPassword(utilizador.Id, null, nova, confirmar);
                 Console.WriteLine("Password alterada com sucesso!");
+            }
+            catch (Exception ex) { Console.WriteLine("Erro: " + ex.Message); }
+        }
+
+        private void CancelarMinhaMatricula(int idAluno)
+        {
+            Console.WriteLine("\n--- Cancelar Matrícula ---");
+
+            var lista = _servicoMatricula.ListarPorAluno(idAluno);
+            if (lista.Count == 0) { Console.WriteLine("Não tens matrículas ativas."); return; }
+
+            Console.WriteLine($"{"ID",-5} {"Disciplina",-30} {"Data",-12} {"Estado",-10}");
+            Console.WriteLine(new string('-', 60));
+            foreach (var m in lista)
+            {
+                string estado = m.Status == 1 ? "Ativa" : m.Status == 2 ? "Trancada" : "Concluída";
+                Console.WriteLine($"{m.Id,-5} {m.NomeDisciplina,-30} {m.DataMatricula:dd/MM/yyyy,-12} {estado,-10}");
+            }
+
+            Console.Write("\nID da matrícula a cancelar (0 para voltar): ");
+            if (!int.TryParse(Console.ReadLine(), out int idMatricula) || idMatricula == 0) return;
+
+
+            var matricula = lista.Find(m => m.Id == idMatricula);
+            if (matricula == null)
+            {
+                Console.WriteLine("Matrícula não encontrada ou não pertence à tua conta.");
+                return;
+            }
+
+            Console.Write("Tens a certeza que queres cancelar esta matrícula? (s/n): ");
+            if (Console.ReadLine()?.ToLower() != "s") return;
+
+            try
+            {
+                _servicoMatricula.DeletarMatricula(idMatricula);
+                Console.WriteLine("Matrícula cancelada com sucesso!");
             }
             catch (Exception ex) { Console.WriteLine("Erro: " + ex.Message); }
         }
